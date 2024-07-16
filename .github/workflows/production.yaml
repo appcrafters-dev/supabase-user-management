@@ -1,0 +1,26 @@
+name: Deploy Migrations to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      SUPABASE_ACCESS_TOKEN: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVzcHZmanF5aGVyYnR3aWlscXVnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMDc4MjMzNywiZXhwIjoyMDM2MzU4MzM3fQ.Un28Jt95pH5Im26_TxKn6CFbBY_wPu68vTBKJk2ciDw"
+      SUPABASE_DB_PASSWORD: "Dvp@user1507"
+      SUPABASE_PROJECT_ID: "espvfjqyherbtwiilqug"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - run: supabase link --project-ref $SUPABASE_PROJECT_ID
+      - run: supabase db push
