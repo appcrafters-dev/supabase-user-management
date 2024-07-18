@@ -152,3 +152,59 @@ export async function signout() {
   await supabase.auth.signOut();
   redirect('/');
 }
+
+export async function updateUserProfile(formData) {
+  const supabase = createClient();
+
+  // Retrieve session
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+  
+  if (sessionError || !session?.user) {
+    throw new Error('User is not authenticated or session retrieval failed.');
+  }
+
+  const user = session.user;
+
+  const avatarFile = formData.get('avatar_file');
+  let avatarUrl = null;
+
+  if (avatarFile && avatarFile.size > 0) {
+    try {
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(`${user.id}-${Date.now()}`, avatarFile);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      avatarUrl = uploadData.path;
+    } catch (error) {
+      console.error('Error uploading avatar:', error.message);
+      throw new Error(`Failed to upload avatar: ${error.message}`);
+    }
+  }
+
+  try {
+    const { error } = await supabase
+      .from('profiles')
+      .upsert({
+        id: user.id,
+        email: formData.get('email'),
+        full_name: formData.get('full_name'),
+        username: formData.get('username'),
+        website: formData.get('website'),
+        avatar_url: avatarUrl || formData.get('avatar_url'), 
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    return { success: true };
+
+  } catch (error) {
+    console.error('Error updating profile:', error.message);
+    throw new Error(`Failed to update profile: ${error.message}`);
+  }
+}

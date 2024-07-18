@@ -33,7 +33,6 @@ export default function LoginPage() {
             name="email"
             type="email"
             required
-            autoComplete="off"
             className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-700 text-white"
           />
         </div>
@@ -44,7 +43,6 @@ export default function LoginPage() {
             name="password"
             type="password"
             required
-            autoComplete="off"
             className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-700 text-white"
           />
         </div>
