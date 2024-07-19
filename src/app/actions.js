@@ -88,19 +88,17 @@ export async function signup(formData) {
 
     let profileError;
     if (existingProfile) {
-      // Update existing profile
       ({ error: profileError } = await supabase
         .from('profiles')
         .update({
           email: profileData.email,
-          full_name: profileData.full_name, // Ensure this matches your DB field name
+          full_name: profileData.full_name, 
           username: profileData.username,
           website: profileData.website,
           avatar_url: profileData.avatar_url,
         })
         .eq('id', user.id));
     } else {
-      // Insert new profile
       ({ error: profileError } = await supabase
         .from('profiles')
         .insert([{
@@ -156,14 +154,10 @@ export async function signout() {
 
 export async function updateUserProfile(formData) {
   const supabase = createClient();
-
-  // Retrieve session
   const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-  
   if (sessionError || !session?.user) {
     throw new Error('User is not authenticated or session retrieval failed.');
   }
-
   const user = session.user;
   const avatarFile = formData.get('avatar_file');
   let avatarUrl = formData.get('avatar_url'); 
