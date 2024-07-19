@@ -13,7 +13,7 @@ export default function ProfilePage() {
 
   const handleSignout = async () => {
     try {
-      await signout(); // Calls the server action to sign out
+      await signout();
     } catch (error) {
       return <ErrorPage errorMessage={error.message}/>;
     }
@@ -38,8 +38,8 @@ export default function ProfilePage() {
 
     try {
       await updateUserProfile(formData);
-      // Optionally refetch user data here if needed
-      setEditMode(false); // Exit edit mode after saving
+  
+      setEditMode(false); 
       const updatedProfile = await getUserProfile(user.id);
       setUser(updatedProfile);
     } catch (error) {
@@ -90,7 +90,7 @@ export default function ProfilePage() {
     return <ErrorPage errorMessage={"No user data found!"}/>;
   }
 
-  const avatarUrl = user.avatar_url ? `https://espvfjqyherbtwiilqug.supabase.co/storage/v1/object/public/avatars/${user.avatar_url}` : '/default-avatar.png';
+  const avatarUrl = user.avatar_url ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${user.avatar_url}` : '/default-avatar.png';
   
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
