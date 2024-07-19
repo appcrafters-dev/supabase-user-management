@@ -2,6 +2,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
+import ErrorPage from './error/page';
  
 
 export async function login(formData) {
@@ -164,9 +165,8 @@ export async function updateUserProfile(formData) {
   }
 
   const user = session.user;
-
   const avatarFile = formData.get('avatar_file');
-  let avatarUrl = null;
+  let avatarUrl = formData.get('avatar_url'); 
 
   if (avatarFile && avatarFile.size > 0) {
     try {
@@ -178,7 +178,7 @@ export async function updateUserProfile(formData) {
         throw uploadError;
       }
 
-      avatarUrl = uploadData.path;
+      avatarUrl = uploadData.path; // Update with new avatar URL
     } catch (error) {
       console.error('Error uploading avatar:', error.message);
       throw new Error(`Failed to upload avatar: ${error.message}`);
@@ -194,7 +194,7 @@ export async function updateUserProfile(formData) {
         full_name: formData.get('full_name'),
         username: formData.get('username'),
         website: formData.get('website'),
-        avatar_url: avatarUrl || formData.get('avatar_url'), 
+        avatar_url: avatarUrl, // Preserve existing or set new avatar URL
       });
 
     if (error) {

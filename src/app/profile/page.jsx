@@ -91,12 +91,13 @@ export default function ProfilePage() {
   }
 
   const avatarUrl = user.avatar_url ? `https://espvfjqyherbtwiilqug.supabase.co/storage/v1/object/public/avatars/${user.avatar_url}` : '/default-avatar.png';
-
+  
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
       <div className="w-full max-w-lg bg-gray-800 rounded-lg shadow-lg p-6">
         {editMode ? (
           <form onSubmit={handleUpdateProfile} encType="multipart/form-data" className="space-y-6">
+            <input type="hidden" name="avatar_url" value={user.avatar_url} />
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <input
@@ -139,6 +140,7 @@ export default function ProfilePage() {
                 defaultValue={user.email}
                 className="bg-gray-700 border border-gray-600 rounded-md px-4 py-2 text-white w-full"
                 placeholder="Email"
+                readOnly
               />
             </div>
             <div>
