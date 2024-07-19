@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { updateUserProfile, getUserProfile, signout } from '@/app/actions'; // Adjust the import paths
+import ErrorPage from '../error/page';
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -14,7 +15,7 @@ export default function ProfilePage() {
     try {
       await signout(); // Calls the server action to sign out
     } catch (error) {
-      console.error('Error during sign out:', error);
+      return <ErrorPage errorMessage={error.message}/>;
     }
   };
 
@@ -43,6 +44,7 @@ export default function ProfilePage() {
       setUser(updatedProfile);
     } catch (error) {
       console.error('Error updating profile:', error.message);
+      return <ErrorPage errorMessage={error.message}/>;
     }
   };
 
@@ -58,6 +60,7 @@ export default function ProfilePage() {
         }
       } catch (error) {
         console.error('Error fetching user profile:', error.message);
+        return <ErrorPage errorMessage={error.message}/>;
       } finally {
         setLoading(false);
       }
@@ -84,7 +87,7 @@ export default function ProfilePage() {
   }
 
   if (!user) {
-    return <center><p className="text-white">No user data found</p></center>;
+    return <ErrorPage errorMessage={"No user data found!"}/>;
   }
 
   const avatarUrl = user.avatar_url ? `https://espvfjqyherbtwiilqug.supabase.co/storage/v1/object/public/avatars/${user.avatar_url}` : '/default-avatar.png';
